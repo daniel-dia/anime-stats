@@ -1,0 +1,14 @@
+{
+  "name": "anime-stat",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^3.3.0",
+    "nuxt": "^4.0.0"
+  }
+}

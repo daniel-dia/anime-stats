@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+.pop-enter-active { transition: opacity .35s ease, transform .35s ease; }
+.pop-leave-active { transition: opacity .15s ease; position: absolute; }
+.pop-enter-from { opacity: 0; transform: translateY(12px); }
+.pop-leave-to { opacity: 0; }
+
+@keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
+.animate-pop { animation: pop .3s ease-out backwards; }

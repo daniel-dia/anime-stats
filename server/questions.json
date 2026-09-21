@@ -1,0 +1,109 @@
+{
+  "demographic": {
+    "type": "choice",
+    "instructions": "Which demographic was this anime primarily made for, based on `state`?",
+    "criteria": {
+      "shounen": "Teen boys. Action, rivalry, tournaments, power progression.",
+      "shoujo": "Teen girls. Romance, emotional relationships, school settings.",
+      "seinen": "Adult men. Darker themes, complex plots, graphic violence or psychology.",
+      "josei": "Adult women. Realistic romance, workplace, mature relationships.",
+      "kodomomuke": "Young children. Simple, episodic, educational or comedic.",
+      "unclear": "Not enough information to tell."
+    }
+  },
+  "primary_genre": {
+    "type": "choice",
+    "instructions": "What is the single dominant genre of this anime, based on `state`?",
+    "criteria": {
+      "action": "Combat, fights, physical conflict drive the plot.",
+      "adventure": "Journey, exploration, quest across a world.",
+      "comedy": "Humor is the main point.",
+      "drama": "Emotional conflict and character relationships drive the plot.",
+      "romance": "A romantic relationship is the central plot.",
+      "fantasy": "Magic, mythical creatures, invented worlds.",
+      "sci_fi": "Technology, space, future settings.",
+      "horror": "Fear, dread, monsters.",
+      "mystery": "Investigation, puzzles, hidden truth.",
+      "slice_of_life": "Everyday life, low stakes, no central conflict.",
+      "sports": "Competitive athletics.",
+      "psychological": "Mental states, manipulation, unreliable perception.",
+      "other": "None of the above."
+    }
+  },
+  "has_isekai": {
+    "type": "noul",
+    "instructions": "Is a character transported to, reborn in, or summoned into another world?"
+  },
+  "has_mecha": {
+    "type": "noul",
+    "instructions": "Are piloted giant robots or powered armor central to the story?"
+  },
+  "has_romance": {
+    "type": "noul",
+    "instructions": "Is there a significant romantic storyline, even if not the main plot?"
+  },
+  "has_comedy": {
+    "type": "noul",
+    "instructions": "Is comedy a significant recurring element?"
+  },
+  "has_supernatural": {
+    "type": "noul",
+    "instructions": "Do supernatural powers, spirits, or magic appear?"
+  },
+  "has_school": {
+    "type": "noul",
+    "instructions": "Is a school or academy a main setting?"
+  },
+  "is_adaptation": {
+    "type": "noul",
+    "instructions": "Is this adapted from a manga, light novel, or video game?"
+  },
+  "maturity": {
+    "type": "score",
+    "instructions": "How mature is the content of this anime?",
+    "criteria": [
+      "All ages: no violence or suggestive content.",
+      "Teen: mild violence, some suggestive humor.",
+      "Older teen: serious violence, dark themes.",
+      "Adult: graphic violence, explicit sexual content."
+    ]
+  },
+  "palette": {
+    "type": "choice",
+    "instructions": "Which colors dominate this anime's visual palette, based on `state`? Spread the probability across every color clearly present.",
+    "criteria": {
+      "black": "Pure black, night, shadow, silhouettes.",
+      "charcoal": "Dark grey, smoke, stone, overcast gloom.",
+      "gray": "Mid grey, concrete, rain, industrial tones.",
+      "silver": "Light grey, steel, chrome, metallic sheen.",
+      "white": "White, snow, clean minimal light.",
+      "cream": "Off-white, parchment, soft warm light.",
+      "beige": "Sand, tatami, muted neutral warmth.",
+      "brown": "Wood, earth, leather, rustic tones.",
+      "chestnut": "Dark brown, bark, dried blood, old sepia.",
+      "sepia": "Faded photograph, nostalgic yellow-brown.",
+      "rust": "Oxidised metal, burnt orange-red, ruins.",
+      "orange": "Bright orange, sunset, flames, energy.",
+      "amber": "Warm amber, lantern light, autumn.",
+      "gold": "Gold, treasure, regal ornaments.",
+      "yellow": "Vivid yellow, sunlight, lightning.",
+      "lime": "Yellow-green, fresh grass, acid tones.",
+      "green": "Green, nature, foliage, plains.",
+      "forest_green": "Deep green, dense forest, military.",
+      "mint": "Pale green, pastel fresh tones.",
+      "teal": "Blue-green, shallow water, cool calm.",
+      "cyan": "Bright cyan, neon, holograms, tech glow.",
+      "sky_blue": "Pale blue, daytime sky, open air.",
+      "blue": "Clear blue, uniforms, water, cool tones.",
+      "navy": "Deep blue, night sea, dark uniforms.",
+      "indigo": "Blue-purple, dusk, mystic tones.",
+      "violet": "Violet, magic effects, twilight.",
+      "purple": "Rich purple, demonic or royal tones.",
+      "lavender": "Pale purple, dreamy pastel.",
+      "magenta": "Hot pink-purple, neon, idol stage lights.",
+      "pink": "Soft pink, cherry blossoms, romance.",
+      "maroon": "Dark red, dried blood, heavy drama.",
+      "red": "Bright red, blood, fire, danger."
+    }
+  }
+}
