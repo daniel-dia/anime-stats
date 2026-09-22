@@ -162,7 +162,7 @@ const tileColors = computed(() => {
             <USkeleton class="h-3 w-2/3" />
             <USkeleton class="h-2 w-full mt-6" />
           </div>
-          <div class="grid grid-cols-3 gap-4 sm:gap-12">
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-12">
             <div v-for="i in 3" :key="i" class="space-y-3">
               <USkeleton class="h-3 w-20" />
               <USkeleton class="h-7 w-2/3" />
@@ -199,7 +199,7 @@ const tileColors = computed(() => {
               </div>
             </section>
 
-            <section class="grid grid-cols-3 gap-x-4 sm:gap-x-12 gap-y-12">
+            <section class="grid grid-cols-2 sm:grid-cols-3 gap-x-4 sm:gap-x-12 gap-y-12">
               <div v-for="q in ['primary_genre', 'demographic']" :key="q" class="space-y-4">
                 <div class="flex items-center gap-2">
                   <p class="text-xs uppercase tracking-widest text-neutral-400">
