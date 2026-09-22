@@ -5,10 +5,9 @@ const ANILIST = `query ($s: String) {
     media(search: $s, type: ANIME, sort: SEARCH_MATCH) {
       title { romaji english }
       description(asHtml: false)
-      seasonYear format episodes source popularity
+      seasonYear format episodes popularity
       coverImage { large }
       siteUrl
-      studios(isMain: true) { nodes { name } }
     }
   }
 }`
@@ -38,9 +37,6 @@ export default defineEventHandler(async (event) => {
   const synopsis = (m.description ?? '').replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '').trim()
   const state = [
     `Title: ${m.title.romaji}${m.title.english && m.title.english !== m.title.romaji ? ` (${m.title.english})` : ''}`,
-    `Format: ${m.format ?? '?'} · Episodes: ${m.episodes ?? '?'} · Year: ${m.seasonYear ?? '?'}`,
-    `Source: ${m.source ?? '?'}`,
-    `Studios: ${m.studios?.nodes?.map((s: any) => s.name).join(', ') || '?'}`,
     '',
     `Synopsis: ${synopsis || '(no synopsis)'}`,
   ].join('\n')

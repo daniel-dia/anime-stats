@@ -54,10 +54,12 @@ const ranked = (probs: Record<string, number> = {}, n = 5) =>
 
 const COLORS: Record<string, string> = {
   black: '#111827',
+  rich_black: '#0d0d0d',
   charcoal: '#374151',
   gray: '#6b7280',
   silver: '#cbd5e1',
   white: '#f8fafc',
+  ivory: '#edeae3',
   cream: '#fef3c7',
   beige: '#e7d6b8',
   brown: '#8b5e3c',
@@ -65,26 +67,32 @@ const COLORS: Record<string, string> = {
   sepia: '#a97142',
   rust: '#b7410e',
   orange: '#f97316',
+  tangerine: '#f28c28',
   amber: '#f59e0b',
   gold: '#d4af37',
   yellow: '#facc15',
   lime: '#a3e635',
+  lime_green: '#8bea3a',
   green: '#22c55e',
   forest_green: '#166534',
   mint: '#6ee7b7',
   teal: '#14b8a6',
   cyan: '#22d3ee',
   sky_blue: '#7dd3fc',
+  baby_blue: '#9ec9e2',
   blue: '#3b82f6',
   navy: '#1e3a8a',
   indigo: '#4f46e5',
   violet: '#8b5cf6',
   purple: '#a21caf',
+  royal_purple: '#5b2a86',
   lavender: '#c4b5fd',
   magenta: '#ec4899',
   pink: '#f9a8d4',
+  baby_pink: '#ffd1dc',
   maroon: '#7f1d1d',
   red: '#ef4444',
+  crimson: '#c8102e',
 }
 
 // fallback mono ramp, usada até o Jev devolver a paleta do anime
@@ -133,7 +141,7 @@ const tileColors = computed(() => {
       <div class="max-w-4xl mx-auto px-6 py-20 space-y-16">
         <header class="space-y-6">
           <h1 class="title-tint text-center text-4xl sm:text-5xl font-bold tracking-tighter transition-colors duration-700">
-            Anime Stats
+            JEV Anime Stats
           </h1>
           <form @submit.prevent="analyze(true)">
             <UInput
@@ -281,7 +289,7 @@ const tileColors = computed(() => {
         </Transition>
         <footer class="pt-8 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 dark:text-neutral-600">
           <span>Built by <a href="https://github.com/daniel-dia" target="_blank" class="underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100">Daniel Santos</a></span>
-          <a href="https://github.com/daniel-dia/anime-stats" target="_blank"
+          <a href="https://github.com/daniel-dia/jev-anime-stats" target="_blank"
             class="inline-flex items-center gap-1.5 underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100">
             <UIcon name="i-simple-icons-github" class="size-3.5" />
             Source on GitHub

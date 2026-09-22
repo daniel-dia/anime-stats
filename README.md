@@ -1,6 +1,6 @@
-# 🍥 Anime Stats
+# 🍥 JEV Anime Stats
 
-**Live: [anime-stat.vercel.app](https://anime-stat.vercel.app)**
+**Live: [jev-anime-stats.vercel.app](https://jev-anime-stats.vercel.app)**
 
 Type an anime title, get its genre — classified by [Jev](https://docs.typesafe.ai), TypeSafe's System One model.
 
@@ -8,7 +8,7 @@ Jev doesn't write text. It takes a *state* and a set of typed questions, and ret
 answers with calibrated probabilities. This app feeds it an anime synopsis from
 [AniList](https://anilist.co) and renders the probability distributions it hands back.
 
-[![Live](https://img.shields.io/badge/live-anime--stat.vercel.app-000?logo=vercel)](https://anime-stat.vercel.app)
+[![Live](https://img.shields.io/badge/live-jev--anime--stats.vercel.app-000?logo=vercel)](https://jev-anime-stats.vercel.app)
 ![Nuxt 4](https://img.shields.io/badge/Nuxt-4-00DC82?logo=nuxt&logoColor=white)
 ![Nuxt UI 3](https://img.shields.io/badge/Nuxt_UI-3-00DC82)
 
@@ -158,9 +158,9 @@ vercel env add JEV_KEY    # add it to Production, Preview and Development
 vercel --prod
 ```
 
-Or import `daniel-dia/anime-stats` at [vercel.com/new](https://vercel.com/new) and set `JEV_KEY`
+Or import `daniel-dia/jev-anime-stats` at [vercel.com/new](https://vercel.com/new) and set `JEV_KEY`
 under *Environment Variables*. This repo's deployment lives at
-[anime-stat.vercel.app](https://anime-stat.vercel.app).
+[jev-anime-stats.vercel.app](https://jev-anime-stats.vercel.app).
 
 > **Heads up:** `JEV_KEY` is only read server-side, so it never reaches the browser — but
 > `/api/analyze` is public. Anyone with the URL spends your Jev credits. For a public deploy,
