@@ -43,19 +43,19 @@
 
 /* fundo levemente tingido com a 2ª cor do anime */
 .tinted {
-  background: linear-gradient(
-    to bottom,
+  background: radial-gradient(
+    125% 110% at 42% 38%,
     #ffffff 30%,
-    color-mix(in oklab, var(--tint, #ffffff) 16%, #ffffff) 100%
+    color-mix(in oklab, var(--tint, #ffffff) 18%, #ffffff) 100%
   );
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .tinted {
-    background: linear-gradient(
-      to bottom,
+    background: radial-gradient(
+      125% 110% at 42% 38%,
       #0a0a0a 30%,
-      color-mix(in oklab, var(--tint, #0a0a0a) 22%, #0a0a0a) 100%
+      color-mix(in oklab, var(--tint, #0a0a0a) 26%, #0a0a0a) 100%
     );
   }
 }
