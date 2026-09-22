@@ -70,7 +70,7 @@
   },
   "palette": {
     "type": "choice",
-    "instructions": "First pick the single most iconic element of this anime — a character or duo, an object, a vehicle, an outfit, a hairstyle, an accessory, a robot, or the defining environment; whichever fans picture first. Then, based on `state`, spread the probability across the colors that element actually is, strongest color first. Green is the easiest color to over-pick here: give it weight only when the element itself is green — green armour, a green uniform, plants as the subject — never for a natural setting or an organic, eerie mood.",
+    "instructions": "First pick the single most iconic element of this anime — a character or duo, an object, a vehicle, an outfit, a hairstyle, an accessory, a robot, or the defining environment; whichever fans picture first. Then, based on `state`, spread the probability across the colors that element actually is, strongest color first. Green is the easiest color to over-pick here: give it weight only when the element itself is green — green armour, a green uniform — never for a natural setting or an organic, eerie mood.",
     "criteria": {
       "black": "Pure black, night, shadow, silhouettes.",
       "rich_black": "Near-absolute black, ink, void, matte darkness.",
