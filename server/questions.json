@@ -70,7 +70,7 @@
   },
   "palette": {
     "type": "choice",
-    "instructions": "First pick the single most iconic element of this anime — its main character or duo, a signature object, a vehicle, or the defining environment; whichever fans picture first. Then, based on `state`, spread the probability across the colors that element actually is, strongest color first.",
+    "instructions": "First pick the single most iconic element of this anime — a character or duo, an object, a vehicle, an outfit, a hairstyle, an accessory, a robot, or the defining environment; whichever fans picture first. Then, based on `state`, spread the probability across the colors that element actually is, strongest color first.",
     "criteria": {
       "black": "Pure black, night, shadow, silhouettes.",
       "charcoal": "Dark grey, smoke, stone, overcast gloom.",

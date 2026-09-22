@@ -95,9 +95,10 @@ model genuinely is unsure, which is information a `true` would have thrown away.
 The `palette` question asks for something Jev cannot name out loud, so the instruction makes it
 decide first and answer second:
 
-> First pick the single most iconic element of this anime — its main character or duo, a signature
-> object, a vehicle, or the defining environment; whichever fans picture first. Then, based on
-> `state`, spread the probability across the colors that element actually is, strongest color first.
+> First pick the single most iconic element of this anime — a character or duo, an object, a vehicle,
+> an outfit, a hairstyle, an accessory, a robot, or the defining environment; whichever fans picture
+> first. Then, based on `state`, spread the probability across the colors that element actually is,
+> strongest color first.
 
 The 32 color options are the only thing it can return, but the reasoning that picks them is steered
 by the instruction. Cowboy Bebop comes back black/navy/blue; Demon Slayer comes back
