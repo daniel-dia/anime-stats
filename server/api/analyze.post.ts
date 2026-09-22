@@ -12,9 +12,24 @@ const ANILIST = `query ($s: String) {
   }
 }`
 
+// A janela por IP fica na memória da instância. Fluid reaproveita instâncias, então
+// isso segura o abuso óbvio de uma origem só — não é um limite global exato.
+// ponytail: contador em memória, trocar por Upstash/Redis se o abuso passar a vir distribuído.
+const WINDOW = 60_000
+const LIMIT = 10
+const HITS = new Map<string, number[]>()
+
 export default defineEventHandler(async (event) => {
   const key = process.env.JEV_KEY
   if (!key) throw createError({ statusCode: 500, message: 'JEV_KEY is not set in the environment' })
+
+  const ip = getRequestIP(event, { xForwardedFor: true }) ?? 'unknown'
+  const now = Date.now()
+  const hits = (HITS.get(ip) ?? []).filter(t => now - t < WINDOW)
+  hits.push(now)
+  if (HITS.size > 5000) HITS.clear()
+  HITS.set(ip, hits)
+  if (hits.length > LIMIT) throw createError({ statusCode: 429, message: `Too many requests — ${LIMIT} per minute per IP. Wait a bit.` })
 
   const { title } = await readBody<{ title?: string }>(event)
   if (!title?.trim()) throw createError({ statusCode: 400, message: 'Give me an anime title' })

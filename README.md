@@ -1,6 +1,6 @@
 # 🍥 JEV Anime Stats
 
-**Deploy: [jev-anime-stats.vercel.app](https://jev-anime-stats.vercel.app)** — behind Vercel Authentication, so it opens only for the team. Run it locally with your own `JEV_KEY`.
+**Live: [jev-anime-stats.vercel.app](https://jev-anime-stats.vercel.app)**
 
 Type an anime title, get its genre — classified by [Jev](https://docs.typesafe.ai), TypeSafe's System One model.
 
@@ -8,7 +8,7 @@ Jev doesn't write text. It takes a *state* and a set of typed questions, and ret
 answers with calibrated probabilities. This app feeds it an anime synopsis from
 [AniList](https://anilist.co) and renders the probability distributions it hands back.
 
-[![Deploy](https://img.shields.io/badge/deploy-private-000?logo=vercel)](https://jev-anime-stats.vercel.app)
+[![Live](https://img.shields.io/badge/live-jev--anime--stats.vercel.app-000?logo=vercel)](https://jev-anime-stats.vercel.app)
 ![Nuxt 4](https://img.shields.io/badge/Nuxt-4-00DC82?logo=nuxt&logoColor=white)
 ![Nuxt UI 3](https://img.shields.io/badge/Nuxt_UI-3-00DC82)
 
@@ -160,11 +160,12 @@ vercel --prod
 
 Or import `daniel-dia/jev-anime-stats` at [vercel.com/new](https://vercel.com/new) and set `JEV_KEY`
 under *Environment Variables*. This repo's deployment lives at
-[jev-anime-stats.vercel.app](https://jev-anime-stats.vercel.app), with Vercel Authentication on.
+[jev-anime-stats.vercel.app](https://jev-anime-stats.vercel.app).
 
 > **Heads up:** `JEV_KEY` is only read server-side, so it never reaches the browser — but
-> `/api/analyze` would otherwise be open, and anyone with the URL spends your Jev credits. This
-> deployment keeps Vercel Authentication on for that reason; drop it only behind a per-IP rate limit.
+> `/api/analyze` is public, and every call spends your Jev credits. The route caps each IP at 10
+> requests a minute, counted in the instance's memory — enough for casual abuse, not for a
+> distributed one. Swap it for Upstash/Redis if that day comes, or turn on Vercel Authentication.
 
 ## How it fits together
 
