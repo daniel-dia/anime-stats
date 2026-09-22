@@ -170,7 +170,8 @@ const tileColors = computed(() => {
                 <img v-if="result.anime.image" :src="result.anime.image" :alt="result.anime.title"
                   class="w-20 rounded-sm object-cover shrink-0">
                 <div class="space-y-2 min-w-0">
-                  <a :href="result.anime.url" target="_blank" class="text-2xl font-medium hover:underline underline-offset-4">
+                  <a :href="result.anime.url" target="_blank"
+                    class="title-tint text-2xl font-semibold tracking-tight hover:underline underline-offset-4 transition-colors duration-700">
                     {{ result.anime.title }}
                   </a>
                   <p class="text-xs uppercase tracking-widest text-neutral-400">
