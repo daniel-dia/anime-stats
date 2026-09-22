@@ -277,7 +277,6 @@ const tileColors = computed(() => {
               </div>
             </section>
 
-            <p class="text-xs text-neutral-400 dark:text-neutral-600">{{ result.model }} · data from AniList</p>
           </div>
         </Transition>
         <footer class="pt-8 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 dark:text-neutral-600">
