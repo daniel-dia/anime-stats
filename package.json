@@ -9,6 +9,11 @@
   },
   "dependencies": {
     "@nuxt/ui": "^3.3.0",
+    "@unovis/ts": "^1.7.0",
+    "@unovis/vue": "^1.7.0",
     "nuxt": "^4.0.0"
+  },
+  "devDependencies": {
+    "@iconify-json/simple-icons": "^1.2.97"
   }
 }

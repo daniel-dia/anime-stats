@@ -8,3 +8,65 @@
 
 @keyframes pop { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
 .animate-pop { animation: pop .3s ease-out backwards; }
+
+/* treemap: rótulo de tamanho fixo, sem a variação do Unovis */
+.treemap {
+  --vis-treemap-label-font-size: 11px;
+  --vis-treemap-label-font-weight: 400;
+  --vis-treemap-label-text-color: #171717;   /* usado em tile claro */
+  --vis-treemap-label-text-color-light: #fff; /* usado em tile escuro */
+  --vis-treemap-label-opacity: 1;
+  --vis-treemap-tile-stroke-width: 0px;
+}
+
+.treemap {
+  --vis-tooltip-background-color: #ffffff;
+  --vis-tooltip-text-color: #171717;
+  --vis-tooltip-border-color: #e5e5e5;
+  --vis-tooltip-padding: 6px 10px;
+  --vis-tooltip-border-radius: 6px;
+  --vis-tooltip-shadow-color: rgba(0, 0, 0, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .treemap {
+  --vis-tooltip-background-color: #171717;
+  --vis-tooltip-text-color: #fafafa;
+    --vis-tooltip-border-color: #404040;
+  }
+}
+
+/* só o tile dominante (o primeiro rótulo) fica grande */
+.treemap g[class*="tile-group"] ~ g[class*="tile-group"] text {
+  font-size: var(--vis-treemap-label-font-size) !important;
+}
+
+/* fundo levemente tingido com a 2ª cor do anime */
+.tinted {
+  background: linear-gradient(
+    to bottom,
+    #ffffff 30%,
+    color-mix(in oklab, var(--tint, #ffffff) 16%, #ffffff) 100%
+  );
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tinted {
+    background: linear-gradient(
+      to bottom,
+      #0a0a0a 30%,
+      color-mix(in oklab, var(--tint, #0a0a0a) 22%, #0a0a0a) 100%
+    );
+  }
+}
+
+/* título na cor primária do anime, escurecida o bastante pra ler */
+.title-tint {
+  color: color-mix(in oklab, var(--primary, #171717) 78%, #000000);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .title-tint {
+    color: color-mix(in oklab, var(--primary, #fafafa) 78%, #ffffff);
+  }
+}

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { VisSingleContainer, VisTooltip, VisTreemap } from '@unovis/vue'
+import { Treemap } from '@unovis/ts'
+import QUESTIONS from '../server/questions.json'
+
 const title = ref('')
 const pending = ref(false)
 const error = ref('')
@@ -83,128 +87,207 @@ const COLORS: Record<string, string> = {
   red: '#ef4444',
 }
 
-const palette = computed(() => ranked(result.value?.answers?.palette?.probabilities, 10))
+// fallback mono ramp, usada até o Jev devolver a paleta do anime
+const STEPS = ['#171717', '#525252', '#737373', '#a3a3a3', '#d4d4d4']
+const tiles = (entries: [string, number][]) =>
+  entries.map(([name, value], i) => ({
+    name: name.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    value,
+    color: tileColors.value[i % tileColors.value.length],
+  }))
+
+const NOUL_KEYS = ['has_isekai', 'has_mecha', 'has_romance', 'has_comedy', 'has_supernatural', 'has_school', 'is_adaptation']
+const openSpec = ref('')
+const spec = (keys: string[]) =>
+  JSON.stringify(Object.fromEntries(keys.map(k => [k, (QUESTIONS as any)[k]])), null, 2)
+
+// tooltip instantâneo do Unovis, no lugar do <title> nativo
+const tileTooltip = {
+  [Treemap.selectors.tile]: (n: any) =>
+    `<span class="font-medium">${n.data?.key ?? ''}</span> · ${Math.round((n.value ?? 0) * 100)}%`,
+}
+
+const palette = computed(() => {
+  const top = ranked(result.value?.answers?.palette?.probabilities, 10)
+  const sum = top.reduce((a, [, p]) => a + p, 0) || 1
+  return top.map(([name, p]) => [name, p, p / sum] as [string, number, number])
+})
+
+// fundo da página: a 2ª cor do anime, bem lavada
+const tint = computed(() => COLORS[palette.value[1]?.[0] as string] ?? null)
+// cor primária do anime, usada no título
+const primary = computed(() => COLORS[palette.value[0]?.[0] as string] ?? null)
+
+// os tiles usam as cores que o Jev viu no anime
+const tileColors = computed(() => {
+  const c = palette.value.map(([name]) => COLORS[name]).filter(Boolean)
+  return c.length ? c : STEPS
+})
+
 </script>
 
 <template>
   <UApp>
-    <div class="min-h-screen bg-gradient-to-b from-violet-50 to-white dark:from-violet-950/30 dark:to-neutral-950">
-      <div class="max-w-5xl mx-auto px-4 py-12 space-y-8">
-        <header class="text-center space-y-2">
-          <h1 class="text-4xl font-bold tracking-tight">🍥 Anime Stat</h1>
-          <p class="text-neutral-500">Start typing an anime title — Jev figures out the genre.</p>
+    <div class="tinted min-h-screen text-neutral-900 dark:text-neutral-100 transition-colors duration-700"
+      :style="{ ...(tint ? { '--tint': tint } : {}), ...(primary ? { '--primary': primary } : {}) }">
+      <div class="max-w-4xl mx-auto px-6 py-20 space-y-16">
+        <header class="space-y-6">
+          <h1 class="title-tint text-center text-4xl sm:text-5xl font-bold tracking-tighter transition-colors duration-700">
+            Anime Stats
+          </h1>
+          <form @submit.prevent="analyze(true)">
+            <UInput
+              v-model="title" variant="none" size="xl" autofocus
+              :loading="pending" placeholder="Type an anime title…"
+              class="w-full"
+              :ui="{ base: 'px-0 text-3xl sm:text-4xl font-light placeholder:text-neutral-300 dark:placeholder:text-neutral-700' }"
+            />
+            <div class="h-px bg-neutral-200 dark:bg-neutral-800 mt-2" />
+          </form>
+          <p v-if="error" class="text-sm text-red-500">{{ error }}</p>
         </header>
 
-        <form class="flex gap-2 max-w-2xl mx-auto" @submit.prevent="analyze(true)">
-          <UInput
-            v-model="title" size="xl" class="flex-1" icon="i-lucide-search"
-            :loading="pending" placeholder="Cowboy Bebop, Frieren, Evangelion..."
-          />
-          <UButton type="submit" size="xl" :loading="pending" :disabled="title.trim().length < 3">
-            Analyze
-          </UButton>
-        </form>
-
-        <UAlert v-if="error" color="error" variant="subtle" icon="i-lucide-triangle-alert" :description="error" />
-
         <!-- skeleton while Jev thinks -->
-        <div v-if="pending && !result" class="space-y-6">
-          <UCard>
-            <div class="flex gap-4">
-              <USkeleton class="w-28 h-40 shrink-0 rounded-lg" />
-              <div class="space-y-2 flex-1 py-1">
-                <USkeleton class="h-6 w-1/2" />
-                <USkeleton class="h-4 w-1/3" />
-                <USkeleton class="h-3 w-full" />
-                <USkeleton class="h-3 w-5/6" />
-              </div>
+        <div v-if="pending && !result" class="space-y-16">
+          <div class="space-y-3">
+            <USkeleton class="h-6 w-1/3" />
+            <USkeleton class="h-3 w-2/3" />
+            <USkeleton class="h-2 w-full mt-6" />
+          </div>
+          <div class="grid grid-cols-3 gap-4 sm:gap-12">
+            <div v-for="i in 3" :key="i" class="space-y-3">
+              <USkeleton class="h-3 w-20" />
+              <USkeleton class="h-7 w-2/3" />
+              <USkeleton class="aspect-4/3 w-full" />
             </div>
-          </UCard>
-          <div class="grid md:grid-cols-3 gap-4">
-            <UCard v-for="i in 3" :key="i">
-              <div class="space-y-3">
-                <USkeleton class="h-8 w-2/3" />
-                <USkeleton v-for="j in 4" :key="j" class="h-3 w-full" />
-              </div>
-            </UCard>
           </div>
         </div>
 
         <Transition name="pop">
-          <div v-if="result" :key="result.anime.title" class="space-y-6" :class="pending && 'opacity-50'">
-            <UCard>
-              <div class="flex gap-4">
+          <div v-if="result" :key="result.anime.title" class="space-y-16" :class="pending && 'opacity-40'">
+            <section class="space-y-5">
+              <div class="flex gap-6 items-start">
                 <img v-if="result.anime.image" :src="result.anime.image" :alt="result.anime.title"
-                  class="w-28 rounded-lg object-cover shrink-0">
-                <div class="space-y-1 min-w-0">
-                  <a :href="result.anime.url" target="_blank" class="text-xl font-semibold hover:underline">
+                  class="w-20 rounded-sm object-cover shrink-0">
+                <div class="space-y-2 min-w-0">
+                  <a :href="result.anime.url" target="_blank" class="text-2xl font-medium hover:underline underline-offset-4">
                     {{ result.anime.title }}
                   </a>
-                  <p class="text-sm text-neutral-500">
+                  <p class="text-xs uppercase tracking-widest text-neutral-400">
                     {{ [result.anime.type, result.anime.year, result.anime.episodes ? `${result.anime.episodes} eps` : null].filter(Boolean).join(' · ') }}
                   </p>
-                  <p class="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-4">{{ result.anime.synopsis }}</p>
+                  <p class="text-sm leading-relaxed text-neutral-500 line-clamp-3">{{ result.anime.synopsis }}</p>
                 </div>
               </div>
-              <template #footer>
-                <div class="flex h-4 rounded-full overflow-hidden ring-1 ring-black/5">
-                  <div
-                    v-for="[name, p] in palette" :key="name"
-                    class="transition-all duration-700 ease-out" :title="`${name} ${Math.round(p * 100)}%`"
-                    :style="{ width: `${p * 100}%`, background: COLORS[name] }"
-                  />
-                </div>
-                <p class="mt-2 text-xs text-neutral-500 capitalize">
-                  {{ palette.map(([n, p]) => `${n} ${Math.round(p * 100)}%`).join(' · ') }}
-                </p>
-              </template>
-            </UCard>
 
-            <div class="grid md:grid-cols-3 gap-4">
-              <UCard v-for="q in ['primary_genre', 'demographic']" :key="q">
-                <template #header>
-                  <span class="text-sm text-neutral-500">{{ q === 'primary_genre' ? 'Primary genre' : 'Demographic' }}</span>
-                </template>
-                <p class="text-2xl font-bold capitalize mb-3">{{ result.answers[q].choice.replace('_', ' ') }}</p>
-                <div class="space-y-1.5">
-                  <div v-for="[name, p] in ranked(result.answers[q].probabilities)" :key="name" class="text-xs">
-                    <div class="flex justify-between capitalize">
-                      <span>{{ name.replace('_', ' ') }}</span><span class="tabular-nums text-neutral-500">{{ Math.round(p * 100) }}%</span>
-                    </div>
-                    <UProgress :model-value="p * 100" size="xs" :ui="{ indicator: 'transition-all duration-700 ease-out' }" />
+              <div class="flex h-3 rounded-full overflow-hidden">
+                <div
+                  v-for="[name, p, share] in palette" :key="name"
+                  class="transition-all duration-700 ease-out"
+                  :title="`${name.replace(/_/g, ' ')} ${Math.round(p * 100)}%`"
+                  :style="{ flex: `${share} 0 0`, background: COLORS[name] }"
+                />
+              </div>
+            </section>
+
+            <section class="grid grid-cols-3 gap-x-4 sm:gap-x-12 gap-y-12">
+              <div v-for="q in ['primary_genre', 'demographic']" :key="q" class="space-y-4">
+                <div class="flex items-center gap-2">
+                  <p class="text-xs uppercase tracking-widest text-neutral-400">
+                    {{ q === 'primary_genre' ? 'Primary genre' : 'Demographic' }}
+                  </p>
+                  <button type="button" class="font-mono text-xs text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100"
+                    :title="`Show the ${q} question`" @click="openSpec = openSpec === q ? '' : q">&lt;/&gt;</button>
+                </div>
+                <pre v-if="openSpec === q" class="text-[10px] leading-relaxed font-mono bg-neutral-50 dark:bg-neutral-900 p-3 rounded-sm overflow-auto max-h-64 text-neutral-500">{{ spec([q]) }}</pre>
+                <ClientOnly>
+                  <div class="treemap">
+                  <VisSingleContainer :data="tiles(ranked(result.answers[q].probabilities))" :height="170">
+                    <VisTreemap
+                      :value="(d: any) => d.value"
+                      :layers="[(d: any) => d.name]"
+                      :tile-color="(n: any) => n.data?.datum?.color ?? '#171717'"
+                      :tile-label="(n: any) => `${n.data?.key ?? ''}`"
+                      :label-fit="'wrap'"
+                      :label-offset-x="6"
+                      :label-offset-y="6"
+                      :tile-padding="2"
+                      :tile-border-radius="3"
+                      :enable-tile-label-font-size-variation="true"
+                      :tile-label-small-font-size="11"
+                      :tile-label-medium-font-size="11"
+                      :tile-label-large-font-size="26"
+                    />
+                    <VisTooltip :triggers="tileTooltip" />
+                  </VisSingleContainer>
                   </div>
-                </div>
-                <template #footer>
-                  <span class="text-xs text-neutral-500">confidence {{ Math.round(result.answers[q].confidence * 100) }}%</span>
-                </template>
-              </UCard>
+                  <template #fallback><div class="h-[170px]" /></template>
+                </ClientOnly>
+                <p class="text-xs text-neutral-400 font-mono">{{ Math.round(result.answers[q].confidence * 100) }}% confidence</p>
+              </div>
 
-              <UCard>
-                <template #header><span class="text-sm text-neutral-500">Has it?</span></template>
-                <div class="space-y-1.5">
-                  <div v-for="n in nouls" :key="n.label" class="text-xs">
-                    <div class="flex justify-between">
-                      <span>{{ n.value >= 0.5 ? '✓' : '✗' }} {{ n.label }}</span>
-                      <span class="tabular-nums text-neutral-500">{{ Math.round(n.value * 100) }}%</span>
-                    </div>
-                    <UProgress :model-value="n.value * 100" size="xs"
-                      :color="n.value >= 0.5 ? 'primary' : 'neutral'"
-                      :ui="{ indicator: 'transition-all duration-700 ease-out' }" />
+              <div class="space-y-4">
+                <div class="flex items-center gap-2">
+                  <p class="text-xs uppercase tracking-widest text-neutral-400">Has it?</p>
+                  <button type="button" class="font-mono text-xs text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100"
+                    title="Show the noul questions" @click="openSpec = openSpec === 'nouls' ? '' : 'nouls'">&lt;/&gt;</button>
+                </div>
+                <pre v-if="openSpec === 'nouls'" class="text-[10px] leading-relaxed font-mono bg-neutral-50 dark:bg-neutral-900 p-3 rounded-sm overflow-auto max-h-64 text-neutral-500">{{ spec(NOUL_KEYS) }}</pre>
+                <ClientOnly>
+                  <div class="treemap">
+                  <VisSingleContainer :data="tiles(nouls.map(n => [n.label, n.value]))" :height="170">
+                    <VisTreemap
+                      :value="(d: any) => d.value"
+                      :layers="[(d: any) => d.name]"
+                      :tile-color="(n: any) => n.data?.datum?.color ?? '#171717'"
+                      :tile-label="(n: any) => `${n.data?.key ?? ''}`"
+                      :label-fit="'wrap'"
+                      :label-offset-x="6"
+                      :label-offset-y="6"
+                      :tile-padding="2"
+                      :tile-border-radius="3"
+                      :enable-tile-label-font-size-variation="true"
+                      :tile-label-small-font-size="11"
+                      :tile-label-medium-font-size="11"
+                      :tile-label-large-font-size="26"
+                    />
+                    <VisTooltip :triggers="tileTooltip" />
+                  </VisSingleContainer>
                   </div>
-                </div>
-              </UCard>
-            </div>
+                  <template #fallback><div class="h-[170px]" /></template>
+                </ClientOnly>
+              </div>
+            </section>
 
-            <UCard>
-              <template #header><span class="text-sm text-neutral-500">Maturity</span></template>
-              <p class="text-2xl font-bold mb-3">{{ MATURITY[Math.round(result.answers.maturity.score)] }}</p>
-              <UProgress :model-value="(result.answers.maturity.score / 3) * 100"
-                :ui="{ indicator: 'transition-all duration-700 ease-out' }" />
-            </UCard>
+            <section class="space-y-4">
+              <div class="flex items-center gap-2">
+                <p class="text-xs uppercase tracking-widest text-neutral-400">Maturity</p>
+                <button type="button" class="font-mono text-xs text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  title="Show the maturity question" @click="openSpec = openSpec === 'maturity' ? '' : 'maturity'">&lt;/&gt;</button>
+              </div>
+              <pre v-if="openSpec === 'maturity'" class="text-[10px] leading-relaxed font-mono bg-neutral-50 dark:bg-neutral-900 p-3 rounded-sm overflow-auto max-h-64 text-neutral-500">{{ spec(['maturity']) }}</pre>
+              <p class="text-2xl sm:text-3xl font-semibold tracking-tight">{{ MATURITY[Math.round(result.answers.maturity.score)] }}</p>
+              <div class="h-2 rounded-full bg-neutral-200 dark:bg-neutral-800">
+                <div class="h-2 rounded-full bg-neutral-900 dark:bg-neutral-100 transition-all duration-700 ease-out"
+                  :style="{ width: `${(result.answers.maturity.score / 3) * 100}%` }" />
+              </div>
+              <div class="flex justify-between text-xs text-neutral-400">
+                <span v-for="m in MATURITY" :key="m">{{ m }}</span>
+              </div>
+            </section>
 
-            <p class="text-center text-xs text-neutral-400">{{ result.model }} · data from AniList</p>
+            <p class="text-xs text-neutral-400 dark:text-neutral-600">{{ result.model }} · data from AniList</p>
           </div>
         </Transition>
+        <footer class="pt-8 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 dark:text-neutral-600">
+          <span>Built by <a href="https://github.com/daniel-dia" target="_blank" class="underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100">Daniel Santos</a></span>
+          <a href="https://github.com/daniel-dia/anime-stats" target="_blank"
+            class="inline-flex items-center gap-1.5 underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100">
+            <UIcon name="i-simple-icons-github" class="size-3.5" />
+            Source on GitHub
+          </a>
+          <span>Classified by <a href="https://typesafe.ai" target="_blank" class="underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100">Jev</a> · data from <a href="https://anilist.co" target="_blank" class="underline underline-offset-2 hover:text-neutral-900 dark:hover:text-neutral-100">AniList</a></span>
+        </footer>
       </div>
     </div>
   </UApp>
