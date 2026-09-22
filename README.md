@@ -163,7 +163,7 @@ under *Environment Variables*. This repo's deployment lives at
 [jev-anime-stats.vercel.app](https://jev-anime-stats.vercel.app).
 
 > **Heads up:** `JEV_KEY` is only read server-side, so it never reaches the browser — but
-> `/api/analyze` is public, and every call spends your Jev credits. The route caps each IP at 10
+> `/api/analyze` is public, and every call spends your Jev credits. The route caps each IP at 20
 > requests a minute, counted in the instance's memory — enough for casual abuse, not for a
 > distributed one. Swap it for Upstash/Redis if that day comes, or turn on Vercel Authentication.
 

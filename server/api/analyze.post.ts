@@ -16,7 +16,7 @@ const ANILIST = `query ($s: String) {
 // isso segura o abuso óbvio de uma origem só — não é um limite global exato.
 // ponytail: contador em memória, trocar por Upstash/Redis se o abuso passar a vir distribuído.
 const WINDOW = 60_000
-const LIMIT = 10
+const LIMIT = 20
 const HITS = new Map<string, number[]>()
 
 export default defineEventHandler(async (event) => {
